@@ -4,22 +4,22 @@ package com.example.jokes.ui.activities;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
 
-import com.example.jokes.databinding.ActivityMainBinding;
-
+import com.example.jokes.R;
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    private final static int REQUEST_ID = 23;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+
     }
 
     /****
