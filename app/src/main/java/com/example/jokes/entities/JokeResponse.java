@@ -6,19 +6,14 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class JokeResponse {
-    @SerializedName("total")
-    @Expose
     private int total;
-
-    @SerializedName("result")
-    @Expose
-    private List<Joke> jokeList;
+    private List<Joke> result;
 
     public int getTotal() {
         return total;
     }
 
-    public List<Joke> getJokeList() {
-        return jokeList;
+    public List<Joke> getResult() {
+        return result;
     }
 }

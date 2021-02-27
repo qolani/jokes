@@ -14,7 +14,7 @@ public class Joke extends BaseObservable {
     private String icon_url;
     private String url;
     private String value;
-    private List<String> categoriesList;
+    private List<String> categories;
 
     /****
      * Empty constructor
@@ -28,12 +28,12 @@ public class Joke extends BaseObservable {
      * @param url
      * @param value
      */
-    public Joke(String jokeId, String icon_url, String url, String value, List<String> categoriesList) {
+    public Joke(String jokeId, String icon_url, String url, String value, List<String> categories) {
         this.jokeId = jokeId;
         this.icon_url = icon_url;
         this.url = url;
         this.value = value;
-        this.categoriesList = categoriesList;
+        this.categories = categories;
     }
 
     /****
@@ -82,11 +82,11 @@ public class Joke extends BaseObservable {
 
     @Bindable
     public List<String> getCategoriesList() {
-        return categoriesList;
+        return categories;
     }
 
-    public void setCategoriesList(List<String> categoriesList) {
-        this.categoriesList = categoriesList;
+    public void setCategoriesList(List<String> categories) {
+        this.categories = categories;
         notifyPropertyChanged(BR.categoriesList);
     }
 }
