@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/jokesListFragment"
         android:name="com.example.jokes.ui.fragments.JokesListFragment"
-        android:label="fragment_jokes_list"
-        tools:layout="@layout/fragment_jokes_list" >
+        android:label="Jokes"
+        tools:layout="@layout/fragment_jokes_list">
         <action
             android:id="@+id/action_jokesListFragment_to_jokeDetailFragment"
             app:destination="@id/jokeDetailFragment" />
@@ -17,6 +17,6 @@
     <fragment
         android:id="@+id/jokeDetailFragment"
         android:name="com.example.jokes.ui.fragments.JokeDetailFragment"
-        android:label="fragment_joke_detail"
+        android:label="Detail"
         tools:layout="@layout/fragment_joke_detail" />
 </navigation>

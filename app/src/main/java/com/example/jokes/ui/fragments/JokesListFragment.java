@@ -49,4 +49,12 @@ public class JokesListFragment extends Fragment {
     private void OnCallMethods(){
 
     }
+
+    private void OnSearchJokes(String keyword){
+
+    }
+
+    private void OnGetRandomJoke(){
+
+    }
 }

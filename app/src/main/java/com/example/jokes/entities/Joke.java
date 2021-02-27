@@ -1,14 +1,11 @@
 package com.example.jokes.entities;
 
-import androidx.annotation.Keep;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.room.Entity;
+import androidx.databinding.library.baseAdapters.BR;
 
-import com.example.jokes.BR;
+import java.util.List;
 
-@Keep
-@Entity(tableName = "joke")
 public class Joke extends BaseObservable {
     /****
      * Property declaration
@@ -17,6 +14,7 @@ public class Joke extends BaseObservable {
     private String icon_url;
     private String url;
     private String value;
+    private List<String> categoriesList;
 
     /****
      * Empty constructor
@@ -30,11 +28,12 @@ public class Joke extends BaseObservable {
      * @param url
      * @param value
      */
-    public Joke(String jokeId, String icon_url, String url, String value) {
+    public Joke(String jokeId, String icon_url, String url, String value, List<String> categoriesList) {
         this.jokeId = jokeId;
         this.icon_url = icon_url;
         this.url = url;
         this.value = value;
+        this.categoriesList = categoriesList;
     }
 
     /****
@@ -48,6 +47,7 @@ public class Joke extends BaseObservable {
 
     public void setJokeId(String jokeId) {
         this.jokeId = jokeId;
+        notifyPropertyChanged(BR.jokeId);
     }
 
     @Bindable
@@ -57,7 +57,7 @@ public class Joke extends BaseObservable {
 
     public void setIcon_url(String icon_url) {
         this.icon_url = icon_url;
-        notifyPropertyChanged(BR.jokeId);
+        notifyPropertyChanged(BR.icon_url);
     }
 
     @Bindable
@@ -67,7 +67,7 @@ public class Joke extends BaseObservable {
 
     public void setUrl(String url) {
         this.url = url;
-        notifyPropertyChanged(BR.jokeId);
+        notifyPropertyChanged(BR.url);
     }
 
     @Bindable
@@ -77,6 +77,16 @@ public class Joke extends BaseObservable {
 
     public void setValue(String value) {
         this.value = value;
-        notifyPropertyChanged(BR.jokeId);
+        notifyPropertyChanged(BR.value);
+    }
+
+    @Bindable
+    public List<String> getCategoriesList() {
+        return categoriesList;
+    }
+
+    public void setCategoriesList(List<String> categoriesList) {
+        this.categoriesList = categoriesList;
+        notifyPropertyChanged(BR.categoriesList);
     }
 }

@@ -6,12 +6,10 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.jokes.entities.Joke;
+import com.example.jokes.entities.JokeResponse;
 import com.example.jokes.interfaces.IJokesRepository;
 import com.example.jokes.remote.RemoteClient;
 import com.example.jokes.remote.RemoteService;
-import com.example.jokes.room.AppDao;
-import com.example.jokes.room.AppDatabase;
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -21,12 +19,10 @@ import io.reactivex.schedulers.Schedulers;
 public class JokesRepository implements IJokesRepository {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MutableLiveData<Long> jokesId = new MutableLiveData<>();
+    private MutableLiveData<JokeResponse> listMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Joke> jokeMutableLiveData = new MutableLiveData<>();
     private static volatile JokesRepository jokesRepository;
     private RemoteClient remoteClient;
-    private AppDatabase appDatabase;
-    private Long createdId;
-    private AppDao appDao;
 
     public static JokesRepository getJokesRepository(Application application) {
         if (jokesRepository == null) {
@@ -40,31 +36,21 @@ public class JokesRepository implements IJokesRepository {
     }
 
     public JokesRepository(Application application) {
-        appDatabase = AppDatabase.getAppDatabase(application);
         remoteClient = RemoteService.getInstance();
-        appDao = appDatabase.getDao();
     }
 
     @Override
-    public MutableLiveData<Long> OnGetSearchJokes(String keyword) {
-        appDao.OnDeleteJokes();
+    public MutableLiveData<JokeResponse> OnSearchJokes(String keyword) {
 
         compositeDisposable.add(
                 remoteClient.OnSearchJokes(keyword)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableObserver<List<Joke>>() {
+                        .subscribeWith(new DisposableObserver<JokeResponse>() {
                             @Override
-                            public void onNext(List<Joke> response) {
+                            public void onNext(JokeResponse response) {
                                 try{
-                                    for (Joke item : response) {
-                                        Joke joke = new Joke(item.getJokeId(), item.getIcon_url(), item.getUrl(), item.getValue());
-                                        createdId = appDao.OnCreateJokes(joke);
-                                    }
-
-                                    if (createdId > 0) {
-                                        jokesId.setValue(createdId);
-                                    }
+                                    listMutableLiveData.setValue(response);
                                 } catch (Exception e){
                                     e.printStackTrace();
                                 }
@@ -73,7 +59,7 @@ public class JokesRepository implements IJokesRepository {
                             @Override
                             public void onError(Throwable e) {
                                 Log.d("TAGS", e.toString());
-                                jokesId.setValue(null);
+                                listMutableLiveData.setValue(null);
                             }
 
                             @Override
@@ -82,7 +68,38 @@ public class JokesRepository implements IJokesRepository {
                             }
                         })
         );
-        return jokesId;
+        return listMutableLiveData;
+    }
+
+    @Override
+    public MutableLiveData<Joke> OnGetRandomJoke() {
+        compositeDisposable.add(
+                remoteClient.OnGetRandomJoke()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableObserver<Joke>() {
+                            @Override
+                            public void onNext(Joke joke) {
+                                try{
+                                    jokeMutableLiveData.setValue(joke);
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.d("TAGS", e.toString());
+                                jokeMutableLiveData.setValue(null);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                Log.d("TAGS", "completed");
+                            }
+                        })
+        );
+        return jokeMutableLiveData;
     }
 
     public void onDisposeObservable() {
