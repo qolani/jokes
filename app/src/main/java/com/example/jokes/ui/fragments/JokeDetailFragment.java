@@ -15,6 +15,9 @@ import com.example.jokes.databinding.FragmentJokeDetailBinding;
 
 public class JokeDetailFragment extends Fragment {
 
+    /****
+     * Property declaration
+     */
     private FragmentJokeDetailBinding binding;
 
     @Override
@@ -38,10 +41,4 @@ public class JokeDetailFragment extends Fragment {
 
     }
 
-    /****
-     * Call all methods in the fragments
-     */
-    private void OnCallMethods(){
-
-    }
 }

@@ -11,6 +11,11 @@ import retrofit2.http.Header;
 import retrofit2.http.Query;
 
 public interface RemoteClient {
+    /**** Endpoints
+     *
+     * @param keyword
+     * @return
+     */
     @GET("search")
     Observable<JokeResponse> OnSearchJokes(@Query("query") String keyword);
 

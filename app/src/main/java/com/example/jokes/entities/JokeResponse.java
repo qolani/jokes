@@ -1,14 +1,17 @@
 package com.example.jokes.entities;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class JokeResponse {
+    /****
+     * Property declaration
+     */
     private int total;
     private List<Joke> result;
 
+    /***Getters
+     *
+     * @return
+     */
     public int getTotal() {
         return total;
     }

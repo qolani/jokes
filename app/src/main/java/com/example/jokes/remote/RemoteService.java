@@ -11,6 +11,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RemoteService {
 
+    /**** Singleton Retrofit service
+     *
+     */
+
     private static volatile Retrofit instance = null;
 
     /****
@@ -29,11 +33,12 @@ public class RemoteService {
      */
     public static RemoteClient getInstance() {
 
-        // Android concept - Double checked locking
-        // Safe threading
-        // Only created once it is needed
-        // Once the instance is created, the instance won't be changed and the next thread will use the same instance rather to create a new instance.
-
+        /*****
+         * Android concept - Double checked locking
+         *          Safe threading
+         *          Only created once it is needed
+         *          Once the instance is created, the instance won't be changed and the next thread will use the same instance rather to create a new instance.
+         */
         if (instance == null) {
             synchronized (RemoteService.class) {
                 if (instance == null) {

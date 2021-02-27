@@ -1,11 +1,9 @@
 package com.example.jokes.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,8 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.jokes.R;
 import com.example.jokes.entities.Joke;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
     private Context context;
@@ -39,12 +40,15 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
 
     class ItemHolder extends RecyclerView.ViewHolder {
         private RecyclerView childRecyclerView;
+        private CircleImageView imageView;
         private TextView joke;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
 
             joke = itemView.findViewById(R.id.joke);
+            imageView = itemView.findViewById(R.id.image);
+
             childRecyclerView = itemView.findViewById(R.id.childRecyclerView);
             childRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             childRecyclerView.setHasFixedSize(true);
@@ -55,7 +59,6 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
     @Override
     public JokeAdapter.ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.joke_item, parent, false);
-        view.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fade));
 
         return new ItemHolder(view);
     }
@@ -64,12 +67,32 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
     public void onBindViewHolder(@NonNull JokeAdapter.ItemHolder holder, int position) {
         final Joke jokes = getItem(position);
 
+        /****
+         * Bind widgets with data
+         */
         holder.joke.setText(jokes.getValue());
 
+        /****
+         * Load image from the internet
+         */
+        try{
+            Glide.with(context)
+                    .load(jokes.getIcon_url())
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .into(holder.imageView);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /****
+         * Connect the second Adapter that loads categories
+         */
         CategoryAdapter categoryAdapter = new CategoryAdapter(context);
 
-        categoryAdapter.submitList(jokes.getCategoriesList());
-        holder.childRecyclerView.setAdapter(categoryAdapter);
-
+        if(jokes.getCategoriesList() != null) {
+            categoryAdapter.submitList(jokes.getCategoriesList());
+            holder.childRecyclerView.setAdapter(categoryAdapter);
+        }
     }
 }

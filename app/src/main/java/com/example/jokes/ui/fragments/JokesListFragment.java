@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 public class JokesListFragment extends Fragment {
 
     /****
-     * Global declaration
+     * Property declaration
      */
     private ArrayList<Joke> jokeArrayList = new ArrayList<>();
     private FragmentJokesListBinding binding;
@@ -38,6 +40,10 @@ public class JokesListFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentJokesListBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
+        /****
+         * Enable page top right menu items
+         */
+        setHasOptionsMenu(true);
 
         return view;
     }
@@ -46,9 +52,16 @@ public class JokesListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /****
+         * Call methods
+         */
         OnInitialize();
         OnSetupRecyclerView();
-        OnCallMethods();
+
+        /****
+         * Call for a random joke if search list is empty
+         */
+        OnGetRandomJoke();
     }
 
     /****
@@ -58,6 +71,9 @@ public class JokesListFragment extends Fragment {
         jokesViewModel = new ViewModelProvider(this).get(JokesViewModel.class);
     }
 
+    /****
+     * Setup Recyclerview
+     */
     private void OnSetupRecyclerView(){
         binding.parentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.parentRecyclerView.setHasFixedSize(true);
@@ -65,27 +81,90 @@ public class JokesListFragment extends Fragment {
     }
 
     /****
-     * Call all methods in the fragments
+     * Search for random jokes
+     * @param keyword
      */
-    private void OnCallMethods(){
-        OnSearchJokes("chuck");
-    }
-
     private void OnSearchJokes(String keyword){
-        jokesViewModel.OnSearchJokes(keyword).observe(getViewLifecycleOwner(), new Observer<JokeResponse>() {
-            @Override
-            public void onChanged(JokeResponse jokeResponse) {
-                if(jokeResponse != null){
-                    jokeArrayList.addAll(jokeResponse.getResult());
-                }
+        OnShowProgressBar();
+
+        jokesViewModel.OnSearchJokes(keyword).observe(getViewLifecycleOwner(), jokeResponse -> {
+            OnHideProgressBar();
+
+            if(jokeResponse != null){
+                binding.total.setText(String.valueOf(jokeResponse.getTotal()));
+                jokeArrayList.addAll(jokeResponse.getResult());
 
                 jokeAdapter.submitList(jokeArrayList);
-                binding.parentRecyclerView.setAdapter(jokeAdapter);
+            } else {
+
+                binding.total.setText(String.valueOf(0));
+                jokeArrayList.clear();
+
+                /****
+                 * Call for a random joke if search list is empty
+                 */
+                OnGetRandomJoke();
             }
+
+            binding.parentRecyclerView.setAdapter(jokeAdapter);
         });
+
     }
 
+    /****
+     * Get a random joke
+     */
     private void OnGetRandomJoke(){
+        jokesViewModel.OnGetRandomJoke().observe(getViewLifecycleOwner(), joke -> {
+            OnHideProgressBar();
+            jokeArrayList.clear();
 
+            if(joke != null){
+                binding.total.setText(String.valueOf(1));
+                jokeArrayList.add(joke);
+
+                jokeAdapter.submitList(jokeArrayList);
+            }
+
+            binding.parentRecyclerView.setAdapter(jokeAdapter);
+        });
+
+    }
+
+    /****
+     * Search menu item
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.search) {
+
+            SearchView searchView = (SearchView) item.getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    OnSearchJokes(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /****
+     * Hide/Show progressBar
+     */
+    private void OnShowProgressBar(){
+        binding.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void OnHideProgressBar(){
+        binding.progressBar.setVisibility(View.GONE);
     }
 }

@@ -18,12 +18,20 @@ import io.reactivex.schedulers.Schedulers;
 
 public class JokesRepository implements IJokesRepository {
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    /****
+     * Property declaration
+     */
     private MutableLiveData<JokeResponse> listMutableLiveData = new MutableLiveData<>();
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private MutableLiveData<Joke> jokeMutableLiveData = new MutableLiveData<>();
     private static volatile JokesRepository jokesRepository;
     private RemoteClient remoteClient;
 
+    /****
+     * Singleton for JokesRepository
+     * @param application
+     * @return
+     */
     public static JokesRepository getJokesRepository(Application application) {
         if (jokesRepository == null) {
             synchronized (JokesRepository.class) {
@@ -35,13 +43,22 @@ public class JokesRepository implements IJokesRepository {
         return jokesRepository;
     }
 
+    /****
+     * Constructor
+     * @param application
+     */
     public JokesRepository(Application application) {
         remoteClient = RemoteService.getInstance();
     }
 
+    /*****
+     * Search for jokes using rxJava/rxAndroid.
+     * Used CompositeDisposable tom group all the disposable objects and dispose them at once.
+     * @param keyword
+     * @return
+     */
     @Override
     public MutableLiveData<JokeResponse> OnSearchJokes(String keyword) {
-
         compositeDisposable.add(
                 remoteClient.OnSearchJokes(keyword)
                         .subscribeOn(Schedulers.io())
@@ -52,13 +69,12 @@ public class JokesRepository implements IJokesRepository {
                                 try{
                                     listMutableLiveData.setValue(response);
                                 } catch (Exception e){
-                                    e.printStackTrace();
+                                    listMutableLiveData.setValue(null);
                                 }
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.d("TAGS", e.toString());
                                 listMutableLiveData.setValue(null);
                             }
 
@@ -71,6 +87,11 @@ public class JokesRepository implements IJokesRepository {
         return listMutableLiveData;
     }
 
+    /*****
+     * Get a random joke using rxJava/rxAndroid.
+     * Used CompositeDisposable tom group all the disposable objects and dispose them at once.
+     * @return
+     */
     @Override
     public MutableLiveData<Joke> OnGetRandomJoke() {
         compositeDisposable.add(
@@ -83,13 +104,12 @@ public class JokesRepository implements IJokesRepository {
                                 try{
                                     jokeMutableLiveData.setValue(joke);
                                 } catch (Exception e){
-                                    e.printStackTrace();
+                                    jokeMutableLiveData.setValue(null);
                                 }
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.d("TAGS", e.toString());
                                 jokeMutableLiveData.setValue(null);
                             }
 
@@ -102,6 +122,9 @@ public class JokesRepository implements IJokesRepository {
         return jokeMutableLiveData;
     }
 
+    /****
+     * Dispose all objects at once
+     */
     public void onDisposeObservable() {
         compositeDisposable.clear();
     }

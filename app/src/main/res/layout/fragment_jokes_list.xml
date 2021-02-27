@@ -5,7 +5,31 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.JokesListFragment">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Jokes: "
+        android:layout_margin="8dp"
+        android:id="@+id/txt"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/txt"
+        android:layout_margin="8dp"
+        android:id="@+id/total"
+        android:textStyle="bold"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:id="@+id/progressBar"/>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/txt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/parentRecyclerView"
