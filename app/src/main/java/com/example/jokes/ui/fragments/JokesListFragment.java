@@ -8,6 +8,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
@@ -33,6 +35,7 @@ public class JokesListFragment extends Fragment {
     private ArrayList<Joke> jokeArrayList = new ArrayList<>();
     private FragmentJokesListBinding binding;
     private JokesViewModel jokesViewModel;
+    private NavController navController;
     private JokeAdapter jokeAdapter;
 
     @Override
@@ -55,7 +58,7 @@ public class JokesListFragment extends Fragment {
         /****
          * Call methods
          */
-        OnInitialize();
+        OnInitialize(view);
         OnSetupRecyclerView();
 
         /****
@@ -67,8 +70,9 @@ public class JokesListFragment extends Fragment {
     /****
      * Initialize view or any other component required by the view
      */
-    private void OnInitialize(){
+    private void OnInitialize(View view){
         jokesViewModel = new ViewModelProvider(this).get(JokesViewModel.class);
+        navController = Navigation.findNavController(view);
     }
 
     /****
@@ -77,7 +81,7 @@ public class JokesListFragment extends Fragment {
     private void OnSetupRecyclerView(){
         binding.parentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.parentRecyclerView.setHasFixedSize(true);
-        jokeAdapter = new JokeAdapter(getActivity());
+        jokeAdapter = new JokeAdapter(getActivity(), navController);
     }
 
     /****

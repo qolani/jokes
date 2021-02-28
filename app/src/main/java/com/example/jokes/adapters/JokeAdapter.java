@@ -4,9 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
@@ -15,15 +19,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.jokes.R;
 import com.example.jokes.entities.Joke;
-
-import de.hdodenhof.circleimageview.CircleImageView;
+import com.example.jokes.viewModel.JokesViewModel;
 
 public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
+    private JokesViewModel jokesViewModel;
+    private NavController navController;
     private Context context;
 
-    public JokeAdapter(Context context){
+    public JokeAdapter(Context context, NavController navController){
         super(DIFF_CALLBACK);
+
         this.context = context;
+        this.navController = navController;
+        jokesViewModel = new ViewModelProvider((FragmentActivity) context).get(JokesViewModel.class);
     }
 
     private static final DiffUtil.ItemCallback<Joke> DIFF_CALLBACK = new DiffUtil.ItemCallback<Joke>() {
@@ -40,7 +48,7 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
 
     class ItemHolder extends RecyclerView.ViewHolder {
         private RecyclerView childRecyclerView;
-        private CircleImageView imageView;
+        private ImageView imageView;
         private TextView joke;
 
         public ItemHolder(@NonNull View itemView) {
@@ -52,6 +60,19 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
             childRecyclerView = itemView.findViewById(R.id.childRecyclerView);
             childRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             childRecyclerView.setHasFixedSize(true);
+
+            itemView.setOnClickListener(View ->{
+                int position = getAdapterPosition();
+
+                if(position != RecyclerView.NO_POSITION){
+                    jokesViewModel.OnSelect(getItem(position));
+
+                    /****
+                     * Navigate to detail fragment
+                     */
+                    navController.navigate(R.id.action_jokesListFragment_to_jokeDetailFragment);
+                }
+            });
         }
     }
 

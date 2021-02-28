@@ -5,15 +5,18 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.jokes.entities.Joke;
 import com.example.jokes.entities.JokeResponse;
+import com.example.jokes.interfaces.IJokesViewModel;
 import com.example.jokes.repo.JokesRepository;
 
-public class JokesViewModel extends AndroidViewModel {
+public class JokesViewModel extends AndroidViewModel implements IJokesViewModel {
     /****
      * Property declaration
      */
+    private final MutableLiveData<Joke> jokeMutableLiveData = new MutableLiveData<>();
     private JokesRepository jokesRepository;
 
     /****
@@ -55,5 +58,15 @@ public class JokesViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         jokesRepository.onDisposeObservable();
+    }
+
+    @Override
+    public LiveData<Joke> OnGetSelected() {
+        return jokeMutableLiveData;
+    }
+
+    @Override
+    public void OnSelect(Joke joke) {
+        jokeMutableLiveData.setValue(joke);
     }
 }

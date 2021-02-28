@@ -8,16 +8,25 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total Jokes: "
+        android:text="Tap any joke item to view more details"
         android:layout_margin="8dp"
-        android:id="@+id/txt"
+        android:id="@+id/txt"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Jokes: "
+        android:layout_margin="4dp"
+        android:layout_below="@+id/txt"
+        android:id="@+id/txt1"
         android:textStyle="bold"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/txt"
-        android:layout_margin="8dp"
+        android:layout_toEndOf="@id/txt1"
+        android:layout_margin="4dp"
+        android:layout_below="@id/txt"
         android:id="@+id/total"
         android:textStyle="bold"/>
 
@@ -29,7 +38,7 @@
         android:id="@+id/progressBar"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/txt"
+        android:layout_below="@+id/txt1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/parentRecyclerView"

@@ -1,8 +1,14 @@
 package com.example.jokes.entities;
 
+import android.widget.ImageView;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.library.baseAdapters.BR;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -115,5 +121,12 @@ public class Joke extends BaseObservable {
     public void setCategoriesList(List<String> categories) {
         this.categories = categories;
         notifyPropertyChanged(BR.categoriesList);
+    }
+
+    @BindingAdapter("image")
+    public static void OnLoadImage(ImageView imageView, String image_url){
+        Glide.with(imageView.getContext())
+                .load(image_url).apply(new RequestOptions().centerCrop())
+                .into(imageView);
     }
 }
