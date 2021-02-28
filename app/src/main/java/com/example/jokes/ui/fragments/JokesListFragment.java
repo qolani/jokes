@@ -12,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -71,7 +72,7 @@ public class JokesListFragment extends Fragment {
      * Initialize view or any other component required by the view
      */
     private void OnInitialize(View view){
-        jokesViewModel = new ViewModelProvider(this).get(JokesViewModel.class);
+        jokesViewModel = new ViewModelProvider(getActivity()).get(JokesViewModel.class);
         navController = Navigation.findNavController(view);
     }
 
@@ -93,6 +94,11 @@ public class JokesListFragment extends Fragment {
 
         jokesViewModel.OnSearchJokes(keyword).observe(getViewLifecycleOwner(), jokeResponse -> {
             OnHideProgressBar();
+
+            /****
+             * Clear the list when populating a new searched list
+             */
+            jokeArrayList.clear();
 
             if(jokeResponse != null){
                 binding.total.setText(String.valueOf(jokeResponse.getTotal()));
@@ -119,6 +125,8 @@ public class JokesListFragment extends Fragment {
      * Get a random joke
      */
     private void OnGetRandomJoke(){
+        OnShowProgressBar();
+
         jokesViewModel.OnGetRandomJoke().observe(getViewLifecycleOwner(), joke -> {
             OnHideProgressBar();
             jokeArrayList.clear();
@@ -132,7 +140,6 @@ public class JokesListFragment extends Fragment {
 
             binding.parentRecyclerView.setAdapter(jokeAdapter);
         });
-
     }
 
     /****
@@ -155,6 +162,11 @@ public class JokesListFragment extends Fragment {
                     return false;
                 }
             });
+
+            return true;
+        } else if(item.getItemId() == R.id.random){
+            OnGetRandomJoke();
+
             return true;
         }
 

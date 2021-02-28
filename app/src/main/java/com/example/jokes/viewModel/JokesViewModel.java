@@ -1,6 +1,8 @@
 package com.example.jokes.viewModel;
 
 import android.app.Application;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -11,6 +13,9 @@ import com.example.jokes.entities.Joke;
 import com.example.jokes.entities.JokeResponse;
 import com.example.jokes.interfaces.IJokesViewModel;
 import com.example.jokes.repo.JokesRepository;
+import com.example.jokes.utils.AppExecutor;
+
+import java.util.concurrent.Executor;
 
 public class JokesViewModel extends AndroidViewModel implements IJokesViewModel {
     /****
@@ -18,6 +23,7 @@ public class JokesViewModel extends AndroidViewModel implements IJokesViewModel 
      */
     private final MutableLiveData<Joke> jokeMutableLiveData = new MutableLiveData<>();
     private JokesRepository jokesRepository;
+    private AppExecutor appExecutor;
 
     /****
      * Constructor
@@ -27,9 +33,13 @@ public class JokesViewModel extends AndroidViewModel implements IJokesViewModel 
         super(application);
 
         /****
-         * Initialize the domain layer
+         * Initialize the domain layer and appExecutor
          */
-        jokesRepository = JokesRepository.getJokesRepository(application);
+        appExecutor = (AppExecutor) application.getApplicationContext();
+
+        if(appExecutor != null) {
+            jokesRepository = JokesRepository.getJokesRepository(application, appExecutor.threadPoolExecutor);
+        }
     }
 
     /*****
@@ -39,7 +49,7 @@ public class JokesViewModel extends AndroidViewModel implements IJokesViewModel 
      * @return
      */
     public LiveData<JokeResponse> OnSearchJokes(String keyword) {
-        return jokesRepository.OnSearchJokes(keyword);
+        return jokesRepository.OnSearchJokesBG(keyword);
     }
 
     /*****
@@ -48,7 +58,7 @@ public class JokesViewModel extends AndroidViewModel implements IJokesViewModel 
      * @return
      */
     public LiveData<Joke> OnGetRandomJoke() {
-        return jokesRepository.OnGetRandomJoke();
+        return jokesRepository.OnGetRandomJokeBG();
     }
 
     /****

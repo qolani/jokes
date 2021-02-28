@@ -11,6 +11,8 @@ import com.example.jokes.interfaces.IJokesRepository;
 import com.example.jokes.remote.RemoteClient;
 import com.example.jokes.remote.RemoteService;
 
+import java.util.concurrent.Executor;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
@@ -26,17 +28,19 @@ public class JokesRepository implements IJokesRepository {
     private MutableLiveData<Joke> jokeMutableLiveData = new MutableLiveData<>();
     private static volatile JokesRepository jokesRepository;
     private RemoteClient remoteClient;
+    private Application application;
+    private Executor executor;
 
     /****
      * Singleton for JokesRepository
      * @param application
      * @return
      */
-    public static JokesRepository getJokesRepository(Application application) {
+    public static JokesRepository getJokesRepository(Application application, Executor executor) {
         if (jokesRepository == null) {
             synchronized (JokesRepository.class) {
                 if (jokesRepository == null) {
-                    jokesRepository = new JokesRepository(application);
+                    jokesRepository = new JokesRepository(application, executor);
                 }
             }
         }
@@ -46,9 +50,31 @@ public class JokesRepository implements IJokesRepository {
     /****
      * Constructor
      * @param application
+     * @param executor
      */
-    public JokesRepository(Application application) {
+    public JokesRepository(Application application, Executor executor) {
         remoteClient = RemoteService.getInstance();
+        this.application = application;
+        this.executor = executor;
+    }
+
+    /****
+     * Run methods in the background thread using thread pool manager
+     */
+    public MutableLiveData<JokeResponse> OnSearchJokesBG(String keyword){
+        executor.execute(() -> {
+            listMutableLiveData = OnSearchJokes(keyword);
+        });
+
+        return listMutableLiveData;
+    }
+
+    public MutableLiveData<Joke> OnGetRandomJokeBG(){
+        executor.execute(() -> {
+            jokeMutableLiveData = OnGetRandomJoke();
+        });
+
+        return jokeMutableLiveData;
     }
 
     /*****
