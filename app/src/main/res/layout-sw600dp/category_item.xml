@@ -9,5 +9,6 @@
                 android:textColor="@color/colorPrimary"
                 android:gravity="start"
                 android:id="@+id/category"
+                android:textSize="21dp"
                 android:layout_margin="8dp"/>
 </RelativeLayout>

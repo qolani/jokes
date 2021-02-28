@@ -8,6 +8,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
                 android:gravity="start"
+                android:textSize="13sp"
                 android:id="@+id/category"
                 android:layout_margin="8dp"/>
 </RelativeLayout>

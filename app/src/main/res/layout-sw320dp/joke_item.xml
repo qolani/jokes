@@ -17,8 +17,8 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_margin="8dp"
                 android:id="@+id/image"/>
 
@@ -30,6 +30,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="8dp"
                 android:maxLines="4"
+                android:textSize="13sp"
                 android:ellipsize="end"
                 android:textColor="@color/brown"/>
 
@@ -40,6 +41,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
+                android:textSize="13sp"
                 android:layout_below="@+id/image"
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -62,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
+                android:textSize="13sp"
                 android:layout_marginStart="8dp"
                 android:layout_below="@+id/url"
                 android:textColor="@color/black"
@@ -86,6 +89,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:layout_below="@id/updated_date"
                 android:textColor="@color/black"
@@ -110,7 +114,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:textStyle="bold"
-                android:textSize="17sp"
+                android:textSize="14sp"
                 android:layout_marginBottom="8dp"
                 android:layout_below="@id/created_date"
                 android:textColor="@color/black"

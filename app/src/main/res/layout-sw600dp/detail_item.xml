@@ -9,5 +9,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
         android:id="@+id/category"
+        android:textSize="21dp"
         android:layout_margin="8dp"/>
 </RelativeLayout>
