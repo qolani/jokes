@@ -1,6 +1,7 @@
 package com.example.jokes.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,11 @@ import com.bumptech.glide.Glide;
 import com.example.jokes.R;
 import com.example.jokes.entities.Joke;
 import com.example.jokes.viewModel.JokesViewModel;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
     private JokesViewModel jokesViewModel;
@@ -47,15 +53,18 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
     };
 
     class ItemHolder extends RecyclerView.ViewHolder {
-        private RecyclerView childRecyclerView;
         private ImageView imageView;
-        private TextView joke;
+        private RecyclerView childRecyclerView;
+        private TextView joke, created_date, updated_date, url;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
 
             joke = itemView.findViewById(R.id.joke);
+            url = itemView.findViewById(R.id.url);
             imageView = itemView.findViewById(R.id.image);
+            created_date = itemView.findViewById(R.id.created_date);
+            updated_date = itemView.findViewById(R.id.updated_date);
 
             childRecyclerView = itemView.findViewById(R.id.childRecyclerView);
             childRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -92,6 +101,9 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
          * Bind widgets with data
          */
         holder.joke.setText(jokes.getValue());
+        holder.url.setText(jokes.getUrl());
+        holder.created_date.setText(jokes.getCreated_at().substring(0, 16));
+        holder.updated_date.setText(jokes.getUpdated_at().substring(0, 16));
 
         /****
          * Load image from the internet
@@ -112,6 +124,11 @@ public class JokeAdapter extends ListAdapter<Joke, JokeAdapter.ItemHolder> {
         CategoryAdapter categoryAdapter = new CategoryAdapter(context);
 
         if(jokes.getCategoriesList() != null) {
+
+            if(jokes.getCategoriesList().size() == 0){
+                jokes.getCategoriesList().add("No category found");
+            }
+
             categoryAdapter.submitList(jokes.getCategoriesList());
             holder.childRecyclerView.setAdapter(categoryAdapter);
         }

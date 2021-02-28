@@ -13,4 +13,5 @@ public interface IJokesRepository {
      */
     MutableLiveData<JokeResponse> OnSearchJokes(String keyword);
     MutableLiveData<Joke> OnGetRandomJoke();
+    void OnDisposeObservable();
 }

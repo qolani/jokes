@@ -57,7 +57,7 @@ public class JokesViewModel extends AndroidViewModel implements IJokesViewModel 
     @Override
     protected void onCleared() {
         super.onCleared();
-        jokesRepository.onDisposeObservable();
+        jokesRepository.OnDisposeObservable();
     }
 
     @Override

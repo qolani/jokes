@@ -78,14 +78,14 @@ public class JokeDetailFragment extends Fragment {
     }
 
     private void OnLoadCategories(List<String> list){
+        Log.d("DFD", String.valueOf(list.size()));
 
-        if(list.size()>0){
-                categoryAdapter.submitList(list);
-            } else {
+        if(list.size() == 0){
             list.add("No category found");
-            }
+        }
 
-            binding.detailRecyclerView.setAdapter(categoryAdapter);
+        categoryAdapter.submitList(list);
+        binding.detailRecyclerView.setAdapter(categoryAdapter);
     }
 
     @Override

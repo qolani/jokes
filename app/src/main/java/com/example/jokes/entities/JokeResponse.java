@@ -8,7 +8,9 @@ public class JokeResponse {
     private int total;
     private List<Joke> result;
 
-    /***Getters
+    public JokeResponse(){}
+
+    /***Getters and Setters
      *
      * @return
      */
@@ -16,7 +18,15 @@ public class JokeResponse {
         return total;
     }
 
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
     public List<Joke> getResult() {
         return result;
+    }
+
+    public void setResult(List<Joke> result) {
+        this.result = result;
     }
 }

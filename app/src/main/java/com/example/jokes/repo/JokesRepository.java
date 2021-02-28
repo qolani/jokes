@@ -125,7 +125,10 @@ public class JokesRepository implements IJokesRepository {
     /****
      * Dispose all objects at once
      */
-    public void onDisposeObservable() {
-        compositeDisposable.clear();
+    @Override
+    public void OnDisposeObservable() {
+        if(compositeDisposable != null) {
+            compositeDisposable.clear();
+        }
     }
 }
